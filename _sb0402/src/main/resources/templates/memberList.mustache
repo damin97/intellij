@@ -1,0 +1,27 @@
+{{>layout/header}}
+
+    <!-- 목록 출력 영역 -->
+        <table class="table table-horizontal table-bordered">
+            <thead class="thead-strong">
+            <tr>
+                <th>멤버 번호</th>
+				<th>이름</th>
+				<th>도로</th>
+				<th>도로명</th>
+				<th>우편번호</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            {{#memberlist}}
+                <tr>
+                    <td>{{memberId}}</td>
+                    <td><a href="/posts/update/{{memberId}}">{{name}}</a></td>
+                    <td>{{city}}</td>
+                    <td>{{street}}</td>
+                    <td>{{zipcode}}</td>
+                </tr>
+            {{/memberlist}}
+            </tbody>
+        </table>
+        <a href="/" role="button" class="btn btn-secondary">홈으로</a>
+{{>layout/footer}}

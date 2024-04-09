@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.damin.shoppingmall.repository.MemberMapper">
+
+    <select id="selectByMemberId" resultType="com.damin.shoppingmall.model.Member">
+        SELECT member_id
+             ,name
+             ,user_id
+             ,pw
+             ,address
+             ,zipcode
+             ,year
+             ,month
+             ,day
+        FROM member
+        WHERE member_id = #{param1}
+    </select>
+    
+    <select id="loginCheck" resultType="com.damin.shoppingmall.model.Member" parameterType="String">
+        SELECT member_id
+             ,name
+             ,user_id
+             ,pw
+             ,address
+             ,zipcode
+             ,year
+             ,month
+             ,day
+        FROM member
+        WHERE user_id = #{param1} 
+    </select>
+    
+	<select id="selectByUserId" resultType="com.damin.shoppingmall.model.Member">
+        SELECT member_id
+             ,name
+             ,user_id
+             ,pw
+             ,address
+             ,zipcode
+             ,year
+             ,month
+             ,day
+        FROM member
+        WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertMember" parameterType="com.damin.shoppingmall.model.Member">
+        INSERT INTO member (name, user_id, pw, address, zipcode, year, month, day)
+        VALUES (#{name}, #{userId}, #{pw}, #{address}, #{zipcode}, #{year}, #{month}, #{day})
+    </insert>
+
+    <update id="updateMember" parameterType="com.damin.shoppingmall.model.Member">
+        update member set
+                            name = #{name},
+                            user_id = #{userId},
+                            pw=#{pw},
+                            address=#{address},
+                            zipcode=#{zipcode},
+                            year=#{year},
+                            month=#{month},
+                            day=#{day}
+        where member_id = #{memberId}
+    </update>
+
+    <delete id="deleteMember" parameterType="com.damin.shoppingmall.model.Member">
+        delete from member where member_id = #{memberId}
+    </delete>
+</mapper>

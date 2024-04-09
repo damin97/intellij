@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.damin.shoppingmall.repository.ProductMapper">
+
+    <select id="selectProductById" resultType="com.damin.shoppingmall.model.Product">
+        SELECT prod_id
+             ,prod_name
+             ,prod_price
+             ,prod_detail
+             ,prod_img
+        FROM products
+        WHERE prod_id = #{prodId} 
+    </select>
+
+    <select id="selectAllProducts" resultType="com.damin.shoppingmall.model.Product">
+        SELECT prod_id
+             ,prod_name
+             ,prod_price
+             ,prod_detail
+             ,prod_img
+        FROM products
+    </select>
+
+    <insert id="insertProduct" parameterType="com.damin.shoppingmall.model.Product">
+        INSERT INTO products (prod_name, prod_price, prod_detail, prod_img)
+        VALUES (#{prodName}, #{prodPrice}, #{prodDetail}, #{prodImg})
+    </insert>
+    
+    <update id="updateProduct" parameterType="com.damin.shoppingmall.model.Product">
+		update products set 
+			prod_name = #{prodName}, 
+			prod_price = #{prodPrice},
+			prod_detail=#{prodDetail},
+			prod_img=#{prodImg}
+		where prod_id = #{prodId}
+	</update>
+
+    <delete id="deleteProduct" parameterType="com.damin.shoppingmall.model.Product">
+        delete from products where prod_id = #{prodId}
+    </delete>
+
+</mapper>

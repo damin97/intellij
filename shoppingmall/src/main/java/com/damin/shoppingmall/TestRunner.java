@@ -39,6 +39,8 @@ public class TestRunner implements ApplicationRunner {
         
         jdbcTemplate.execute("INSERT INTO Member "
         		+ "(name, user_id, pw, address, zipcode, year, month, day) values ('김다민', 'damin', 'egosum1!', '서울시 진관2로 90 은평뉴타운 310동 701호', '03310', '1997', '01', '14')");
+        jdbcTemplate.execute("INSERT INTO Member "
+                + "(name, user_id, pw, address, zipcode, year, month, day) values ('관리자', 'admin', '1234', '서울시 진관2로 90 은평뉴타운 310동 701호', '03310', '1997', '01', '14')");
 		
 	}
 

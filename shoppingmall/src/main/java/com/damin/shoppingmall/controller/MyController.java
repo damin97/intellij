@@ -1,27 +1,31 @@
 package com.damin.shoppingmall.controller;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import com.damin.shoppingmall.model.*;
+import com.damin.shoppingmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.damin.shoppingmall.model.Member;
-import com.damin.shoppingmall.model.Orders;
-import com.damin.shoppingmall.model.Product;
 import com.damin.shoppingmall.repository.MemberMapper;
-import com.damin.shoppingmall.service.LoginService;
-import com.damin.shoppingmall.service.OrderService;
-import com.damin.shoppingmall.service.ProductService;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @Controller
+@WebServlet("/productDetail.jsp")
 public class MyController {
 	
 	@Autowired
@@ -35,15 +39,16 @@ public class MyController {
 	
 	@Autowired
 	LoginService loginService;
+
+	@Autowired
+	HeartService heartService;
+
+	@Autowired
+	ShopService shopService;
 	
 	@GetMapping("/")
 	public String main(Model model) {
-//		model.addAttribute("userName", "홍길동");
-//		model.addAttribute("aaa123", "가나다");
-//		model.addAttribute("product", 
-//				    productService.getProductById(3L));
 		return "main";
-		// return "redirect:/list";
 	}
 	
 	@GetMapping("/introduce")
@@ -75,11 +80,52 @@ public class MyController {
 	        model.addAttribute("loginMember", login); // 로그인된 사용자 정보를 모델에 추가
 	        return "main";
 	    } else {
-	        // 로그인 실패 처리
-	        return "redirect:/login"; // 실패 시 로그인 페이지로 리다이렉트
+	        return "loginForm"; // 실패 시 로그인 페이지로 리다이렉트
 	    }
 	}
-	
+
+	@GetMapping("/myPage")
+	public String myPage() {
+		return "myPage";
+	}
+
+	@GetMapping("/myAccount")
+	public String myAccount(Model model, HttpSession session) {
+		Member loginMember = (Member) session.getAttribute("loginMember");
+		model.addAttribute("myList", memberMapper.selectByMemberId(loginMember.getMemberId()));
+		return "myUpdate";
+	}
+
+	@PostMapping("/updateMyAccount")
+	public String updateMyAccount(Model model, HttpServletRequest request) {
+		Long memberId = Long.parseLong(request.getParameter("memberId"));
+		String name = request.getParameter("name");
+		String userId = request.getParameter("userId");
+		String pw = request.getParameter("pw");
+		String address = request.getParameter("address");
+		int zipcode = Integer.parseInt(request.getParameter("zipcode"));
+		int year = Integer.parseInt(request.getParameter("year"));
+		int month = Integer.parseInt(request.getParameter("month"));
+		int day = Integer.parseInt(request.getParameter("day"));
+
+		Member member = Member.builder()
+				.memberId(memberId)
+				.name(name)
+				.userId(userId)
+				.pw(pw)
+				.address(address)
+				.zipcode(zipcode)
+				.year(year)
+				.month(month)
+				.day(day)
+				.build();
+
+		memberMapper.updateMember(member);
+
+		model.addAttribute("myList", memberMapper.selectByMemberId(memberId));
+		return "myUpdate";
+	}
+
 	@GetMapping("/members")
 	public String memberList(Model model) {
 		model.addAttribute("memberList", memberMapper.selectAllMember());
@@ -109,6 +155,34 @@ public class MyController {
 		model.addAttribute("member", memberMapper.selectByMemberId(memberId));
 
 		return "memberUpdate";
+	}
+
+	@GetMapping("/myLikes")
+	public String myLikes(Model model, HttpSession session) {
+		Member loginMember = (Member) session.getAttribute("loginMember");
+		Long memberId = loginMember.getMemberId();
+
+		List<Map<String, Object>> heartProductList = new ArrayList<>();
+		List<Heart> heartList = heartService.getAllHeartByMemberId(memberId);
+
+		for (Heart heart : heartList) {
+			Map<String, Object> heartProduct = new HashMap<>();
+			heartProduct.put("likeId", heart.getLikeId());
+			heartProduct.put("likeClick", heart.isLikeClick());
+			heartProduct.put("memberId", heart.getMemberId());
+			heartProduct.put("prodId", heart.getProdId());
+
+			// 제품 정보 조회 및 추가
+			Product product = productService.getProductById(heart.getProdId());
+			heartProduct.put("prodName", product.getProdName());
+			heartProduct.put("prodPrice", product.getProdPrice());
+			heartProduct.put("prodImg", product.getProdImg());
+
+			heartProductList.add(heartProduct);
+		}
+
+		model.addAttribute("heartProductList", heartProductList);
+		return "myLikes";
 	}
 	
 	@GetMapping("/items")
@@ -198,9 +272,40 @@ public class MyController {
 	}
 
 	@GetMapping("productDetail")
-	public String productDetail(Model model, Long prodId) {
+	public String productDetail(Model model, Long prodId, HttpSession session) {
+
+		Member loginMember = (Member) session.getAttribute("loginMember");
+		if (loginMember != null) {
+			model.addAttribute("login", true);
+		} else {
+			model.addAttribute("login", false);
+		}
+
 		model.addAttribute("prod", productService.getProductById(prodId));
+		model.addAttribute("like", heartService.getHeartByProdId(prodId));
 		return "productDetail";
+	}
+
+	@GetMapping("/heartClick")
+	public @ResponseBody Heart heartClick(@RequestParam boolean likeClick, @RequestParam Long prodId, HttpSession session) throws IOException {
+		// 로그인 상태 확인
+		Member loginMember = (Member) session.getAttribute("loginMember");
+		if (loginMember == null) {
+			return null;
+		} else {
+			Heart heart = new Heart(likeClick, loginMember.getMemberId(), prodId);
+			// Heart 테이블에서 해당 prodId 값으로 기존 데이터 조회
+			Heart existingHeart = heartService.getHeartByProdId(prodId);
+
+			if (existingHeart == null) {
+				// 데이터베이스에 해당 prodId 값의 데이터가 없으면 새로운 데이터 추가
+				heartService.addLike(heart);
+			} else {
+				// 데이터베이스에 해당 prodId 값의 데이터가 이미 존재하면 삭제
+				heartService.deleteLike(prodId);
+			}
+			return heart;
+		}
 	}
 
 	@GetMapping("/deleteProduct")
@@ -222,7 +327,20 @@ public class MyController {
 		productService.addProduct(product);
 		return "redirect:/items";
 	}
-	
+
+	@GetMapping("/myShop")
+	public String myShop(Model model, Long prodId, HttpSession session) {
+		Member loginMember = (Member) session.getAttribute("loginMember");
+		if (loginMember == null) {
+			return null;
+		} else {
+
+		}
+		Long memberId = loginMember.getMemberId();
+		model.addAttribute("shopList", shopService.getAllShopByMemberId(memberId));
+		return "myShop";
+	}
+
 	@GetMapping("/orders")
 	public String orders(Model model) {
 		model.addAttribute("orderList", orderService.getAllOrders());

@@ -8,10 +8,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="/loginCheck" method="post">
-	아이디: <input type="text" name="userId" placeholder="아이디를 입력하세요">
-	비밀번호: <input type="text" name="pw" placeholder="비밀번호를 입력하세요">
-	<button type="submit">로그인</button>
+	<form id="loginForm" action="/loginCheck" method="post">
+		아이디: <input type="text" name="userId" placeholder="아이디를 입력하세요"><br/>
+		비밀번호: <input type="text" name="pw" placeholder="비밀번호를 입력하세요">
+		<button type="submit">로그인</button>
 	</form>
+
 </body>
 </html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.damin.shoppingmall.repository.HeartMapper">
+
+    <select id="selectAllHearts" resultType="com.damin.shoppingmall.model.Heart">
+        SELECT like_id
+             ,like_click
+             ,member_id
+             ,prod_id
+        FROM heart
+    </select>
+
+    <select id="selectAllHeartByMemberId" resultType="com.damin.shoppingmall.model.Heart">
+        SELECT like_id
+             ,like_click
+             ,member_id
+             ,prod_id
+        FROM heart where member_id = #{memberId}
+    </select>
+
+    <insert id="insertHeart" parameterType="com.damin.shoppingmall.model.Heart">
+        INSERT INTO heart (like_click, member_id, prod_id)
+        VALUES (#{likeClick}, #{memberId}, #{prodId})
+    </insert>
+
+    <delete id="deleteHeart" parameterType="com.damin.shoppingmall.model.Heart">
+        delete from heart where prod_id = #{prodId}
+    </delete>
+
+</mapper>

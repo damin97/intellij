@@ -42,15 +42,15 @@
             <td><input type="text" name="zipcode" value="${member.zipcode}"/></td>
         </tr>
         <tr>
-            <td><label for="year">년</label></td>
+            <td><label for="year">출생년도</label></td>
             <td><input type="text" name="year" value="${member.year}"/></td>
         </tr>
         <tr>
-            <td><label for="month">월</label></td>
+            <td><label for="month">출생월</label></td>
             <td><input type="text" name="month" value="${member.month}"/></td>
         </tr>
         <tr>
-            <td><label for="day">일</label></td>
+            <td><label for="day">출생일</label></td>
             <td><input type="text" name="day" value="${member.day}"/></td>
         </tr>
         <tr>

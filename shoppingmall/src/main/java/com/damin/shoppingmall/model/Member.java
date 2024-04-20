@@ -26,4 +26,5 @@ public class Member {
 	@NonNull private int year;
 	@NonNull private int month;
 	@NonNull private int day;
+
 }

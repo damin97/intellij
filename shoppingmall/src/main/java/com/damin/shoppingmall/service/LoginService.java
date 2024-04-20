@@ -16,11 +16,19 @@ public class LoginService {
 	HttpSession httpSession;
 	
 	public Member login(String userId, String pw) {
+
 		Member member = memberMapper.loginCheck(userId);
 		System.out.println(member);
 		
 		if(member != null && member.getUserId().equals(userId) && member.getPw().equals(pw)) {
 			httpSession.setAttribute("loginMember", member);
+
+			if (member.getUserId().equals("admin")) {
+				httpSession.setAttribute("isAdmin", true);
+			} else {
+				httpSession.setAttribute("isAdmin", false);
+			}
+
 			System.out.println("로그인 성공");
 			return member;
 		} 
@@ -28,5 +36,6 @@ public class LoginService {
 	}
 	public void logout() {
 		httpSession.removeAttribute("loginMember");
+		httpSession.removeAttribute("isAdmin");
 	}
 }

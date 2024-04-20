@@ -26,18 +26,41 @@
     <p>회원 기능</p>
     <p>
         <a href="/members/new">회원 가입</a><br>
-        <a href="/members">회원 관리</a>
+        <c:choose>
+            <c:when test="${sessionScope.isAdmin eq true}">
+                <a href="/members">회원 관리</a><br>
+            </c:when>
+            <c:otherwise>
+                <!-- 관리자가 아닌 경우, 링크를 표시하지 않습니다. -->
+            </c:otherwise>
+        </c:choose>
+        <a href="/myPage">마이페이지</a>
     </p>
     <p>제품 기능</p>
     <p>
-        <a href="/items/new">제품 등록</a><br>
         <a href="/items">제품 목록</a><br>
-        <a href="/items/manage">제품 관리</a>
+        <c:choose>
+            <c:when test="${sessionScope.isAdmin eq true}">
+                <a href="/items/new">제품 등록</a><br>
+                <a href="/items/manage">제품 관리</a>
+            </c:when>
+            <c:otherwise>
+                <!-- 관리자가 아닌 경우, 링크를 표시하지 않습니다. -->
+            </c:otherwise>
+        </c:choose>
     </p>
     <p>주문 기능</p>
     <p>
         <a href="/order">제품 주문</a><br>
-        <a href="/orders">주문 내역</a>
+        <c:choose>
+            <c:when test="${sessionScope.isAdmin eq true}">
+                <a href="/orders">주문 내역</a>
+            </c:when>
+            <c:otherwise>
+                <!-- 관리자가 아닌 경우, 링크를 표시하지 않습니다. -->
+            </c:otherwise>
+        </c:choose>
+
     </p>
 </div>
 </body>

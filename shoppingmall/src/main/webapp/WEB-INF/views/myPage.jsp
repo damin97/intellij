@@ -24,7 +24,7 @@
         <a href="/myLikes">찜 목록</a><br>
     </p>
     <p>
-        <a href="/">장바구니</a>
+        <a href="/myShops">장바구니</a>
     </p>
 </div>
 </body>

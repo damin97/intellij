@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.damin.shoppingmall.repository.ShopMapper">
+
+    <select id="selectAllShopByMemberId" resultType="com.damin.shoppingmall.model.Shop">
+        SELECT shop_id
+             ,member_id
+             ,prod_id
+            ,count
+        FROM shop where member_id = #{memberId}
+    </select>
+
+    <insert id="insertShop" parameterType="com.damin.shoppingmall.model.Shop">
+        INSERT INTO shop (member_id, prod_id, count)
+        VALUES (#{memberId}, #{prodId}, #{count})
+    </insert>
+
+</mapper>

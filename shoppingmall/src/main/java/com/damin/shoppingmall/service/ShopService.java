@@ -16,4 +16,8 @@ public class ShopService {
     public List<Shop> getAllShopByMemberId(Long memberId) {
         return shopMapper.selectAllShopByMemberId(memberId);
     }
+
+    public void addShop(Shop shop) {
+        shopMapper.insertShop(shop);
+    }
 }

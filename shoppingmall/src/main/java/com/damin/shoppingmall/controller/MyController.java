@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.damin.shoppingmall.repository.MemberMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -184,6 +185,35 @@ public class MyController {
 		model.addAttribute("heartProductList", heartProductList);
 		return "myLikes";
 	}
+
+	@GetMapping("/myShops")
+	public String myShops(Model model, HttpSession session) {
+		Member loginMember = (Member) session.getAttribute("loginMember");
+		Long memberId = loginMember.getMemberId();
+
+		List<Map<String, Object>> shopProductList = new ArrayList<>();
+		List<Shop> shopList = shopService.getAllShopByMemberId(memberId);
+
+		for (Shop shop : shopList) {
+			Map<String, Object> shopProduct = new HashMap<>();
+			shopProduct.put("shopId", shop.getShopId());
+			shopProduct.put("count", shop.getCount());
+			shopProduct.put("memberId", shop.getMemberId());
+			shopProduct.put("prodId", shop.getProdId());
+
+			// 제품 정보 조회 및 추가
+			Product product = productService.getProductById(shop.getProdId());
+			shopProduct.put("prodName", product.getProdName());
+			shopProduct.put("prodPrice", product.getProdPrice());
+			shopProduct.put("prodDetail", product.getProdDetail());
+			shopProduct.put("prodImg", product.getProdImg());
+
+			shopProductList.add(shopProduct);
+		}
+
+		model.addAttribute("shopProductList", shopProductList);
+		return "myShops";
+	}
 	
 	@GetMapping("/items")
 	public String list(Model model) {
@@ -271,7 +301,7 @@ public class MyController {
 		return "productManage";
 	}
 
-	@GetMapping("productDetail")
+	@GetMapping("/productDetail")
 	public String productDetail(Model model, Long prodId, HttpSession session) {
 
 		Member loginMember = (Member) session.getAttribute("loginMember");
@@ -328,17 +358,21 @@ public class MyController {
 		return "redirect:/items";
 	}
 
-	@GetMapping("/myShop")
-	public String myShop(Model model, Long prodId, HttpSession session) {
+	@GetMapping("/toMyShop")
+	public @ResponseBody String myShop(@RequestParam Long prodId, @RequestParam Integer count, HttpSession session, Model model) {
 		Member loginMember = (Member) session.getAttribute("loginMember");
-		if (loginMember == null) {
-			return null;
-		} else {
 
+		if(loginMember == null) {
+			model.addAttribute("login", false);
+			model.addAttribute("error", "로그인 후 이용 가능합니다.");
+		} else {
+			model.addAttribute("login", true);
+			Long memberId = loginMember.getMemberId();
+
+			Shop shop = new Shop(memberId, prodId, count);
+			shopService.addShop(shop);
 		}
-		Long memberId = loginMember.getMemberId();
-		model.addAttribute("shopList", shopService.getAllShopByMemberId(memberId));
-		return "myShop";
+		return "";
 	}
 
 	@GetMapping("/orders")

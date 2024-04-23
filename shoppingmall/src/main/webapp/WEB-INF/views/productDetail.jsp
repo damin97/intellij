@@ -7,6 +7,20 @@
     <meta charset="UTF-8">
     <title>Insert title here</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        // 에러 메시지를 팝업창으로 표시하는 함수
+        function showErrorPopup(errorMessage) {
+            alert(errorMessage); // 팝업창에 에러 메시지를 표시합니다.
+        }
+
+        // 페이지 로드 시 실행되는 함수
+        window.onload = function() {
+            <%-- 에러 메시지가 존재할 경우 showErrorPopup 함수를 호출하여 팝업창을 표시합니다. --%>
+            if (error != null) {
+            showErrorPopup(${error});
+            }
+        };
+    </script>
 </head>
 <body>
 <c:import url="header.jsp"/>
@@ -37,7 +51,9 @@
                 <img src="${like.likeClick ? 'like_fill.png' : 'like_empty.png'}" alt="하트">
             </button>
         </c:if>
-            <div><a href="/myShop?prodId=${prod.prodId}">장바구니</a></div>
+            <div>
+                <button onclick="addToCart()">장바구니 담기</button>
+            </div>
             <div><a href="#">구매하기</a></div>
     </div>
 </div>
@@ -75,7 +91,36 @@
                 }
             });
         });
+
     });
+
+    var login = ${login};
+    var prodId = ${prod.prodId};
+
+    function addToCart() {
+        // count 값을 가져옵니다.
+        var count = parseInt(document.getElementById('count').value);
+
+        $.ajax({
+            type: "GET",
+            url: "/toMyShop",
+            data: {
+                prodId: prodId,
+                count: count
+            },
+            success: function(response) {
+                if(login === false) {
+                    alert("로그인 후 이용 가능합니다."); // 에러 메시지 알림 창 표시
+                } else {
+                    alert("상품이 장바구니에 추가되었습니다."); // 성공 알림 창 표시
+                }
+            },
+            error: function(xhr, status, error) {
+                // AJAX 요청이 실패했을 때 처리할 동작을 여기에 작성합니다.
+                alert("상품을 추가하는 도중 오류가 발생했습니다: " + error); // 오류 알림 창 표시
+            }
+        });
+    }
 </script>
 </body>
 </html>

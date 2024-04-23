@@ -5,6 +5,14 @@
 
 <mapper namespace="com.damin.shoppingmall.repository.HeartMapper">
 
+    <select id="selectHeartByProdId" resultType="com.damin.shoppingmall.model.Heart">
+        SELECT like_id
+             ,like_click
+             ,member_id
+             ,prod_id
+        FROM heart where prod_id = #{prodId}
+    </select>
+
     <select id="selectAllHearts" resultType="com.damin.shoppingmall.model.Heart">
         SELECT like_id
              ,like_click

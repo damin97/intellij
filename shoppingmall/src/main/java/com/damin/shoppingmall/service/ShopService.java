@@ -20,4 +20,8 @@ public class ShopService {
     public void addShop(Shop shop) {
         shopMapper.insertShop(shop);
     }
+
+    public void deleteShop(Long prodId) {
+        shopMapper.deleteShop(prodId);
+    }
 }

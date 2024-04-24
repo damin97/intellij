@@ -19,17 +19,19 @@
         <th>가격</th>
         <th>상세설명</th>
         <th>수량</th>
+        <th>삭제</th>
     </tr>
     </thead>
     <tbody id="tbody">
     <c:forEach var="shop" items="${shopList}">
         <tr>
             <td>${shop.shopId}</td>
-            <td><img src="${shop.prodImg}" width="300px" height="300px"></td>
-            <td><a href="shop?prodId=${shop.prodId}">${shop.prodName}</a></td>
+            <td><img src="${shop.prodImg}" width="100px"></td>
+            <td><a href="productDetail?prodId=${shop.prodId}">${shop.prodName}</a></td>
             <td>${shop.prodPrice}</td>
             <td>${shop.prodDetail}</td>
             <td>${shop.count}</td>
+            <td><button onclick="location.href='/deleteShop?prodId=${shop.prodId}'">삭제</button></td>
         </tr>
     </c:forEach>
     </tbody>

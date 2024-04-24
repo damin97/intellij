@@ -211,8 +211,16 @@ public class MyController {
 			shopProductList.add(shopProduct);
 		}
 
-		model.addAttribute("shopProductList", shopProductList);
-		return "myShops";
+		model.addAttribute("shopList", shopProductList);
+		return "myShop";
+	}
+
+	@GetMapping("/deleteShop")
+	public String deleteShop(Long prodId, HttpSession session) {
+		Member loginMember = (Member) session.getAttribute("loginMember");
+		Long memberId = loginMember.getMemberId();
+
+		return "myShop";
 	}
 	
 	@GetMapping("/items")

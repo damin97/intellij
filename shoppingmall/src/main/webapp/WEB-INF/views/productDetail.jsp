@@ -113,6 +113,7 @@
                     alert("로그인 후 이용 가능합니다."); // 에러 메시지 알림 창 표시
                 } else {
                     alert("상품이 장바구니에 추가되었습니다."); // 성공 알림 창 표시
+                    location.reload();
                 }
             },
             error: function(xhr, status, error) {

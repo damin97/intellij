@@ -12,4 +12,6 @@ public interface ShopMapper {
     List<Shop> selectAllShopByMemberId(Long memberId);
 
     void insertShop(Shop shop);
+
+    void deleteShop(Long prodId);
 }

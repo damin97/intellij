@@ -18,4 +18,8 @@
         VALUES (#{memberId}, #{prodId}, #{count})
     </insert>
 
+    <delete id="deleteShop" parameterType="com.damin.shoppingmall.model.Shop">
+        delete from shop where prod_id = #{prodId}
+    </delete>
+
 </mapper>

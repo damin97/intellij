@@ -216,9 +216,13 @@ public class MyController {
 	}
 
 	@GetMapping("/deleteShop")
-	public String deleteShop(Long prodId, HttpSession session) {
+	public String deleteShop(Long prodId, Long memberId, HttpSession session) {
 		Member loginMember = (Member) session.getAttribute("loginMember");
-		Long memberId = loginMember.getMemberId();
+		Long checkMemberId = loginMember.getMemberId();
+
+		if(memberId.equals(checkMemberId) && prodId != null) {
+			shopService.deleteShop(prodId);
+		}
 
 		return "myShop";
 	}

@@ -31,7 +31,7 @@
             <td>${shop.prodPrice}</td>
             <td>${shop.prodDetail}</td>
             <td>${shop.count}</td>
-            <td><button onclick="location.href='/deleteShop?prodId=${shop.prodId}'">삭제</button></td>
+            <td><button onclick="location.href='/deleteShop?prodId=${shop.prodId}&memberId=${shop.memberId}'">삭제</button></td>
         </tr>
     </c:forEach>
     </tbody>

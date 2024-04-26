@@ -4,24 +4,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>헤더 가운데 정렬</title>
-<style>
-.header {
-    text-align: center; /* 텍스트를 가운데 정렬합니다. */
-    padding: 10px; /* 상하좌우 여백을 추가합니다. */
-    background-color: #f1f1f1; /* 배경색을 지정합니다. */
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        .header a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header a:hover {
+            color: #ddd;
+        }
+
+        .header button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .header button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
+<body>
 <div class="header">
-<a href="/">메인으로</a>
-<c:choose>
-    <c:when test="${loginMember ne null}">
-        <span>${loginMember.name} 님 환영합니다. <button onclick="location.href='/logout'">로그아웃</button></span>
-    </c:when>
-    <c:otherwise>
-        <button onclick="location.href='/login'">로그인</button>
-    </c:otherwise>
-</c:choose>
+    <a href="/">메인으로</a>
+    <c:choose>
+        <c:when test="${loginMember ne null}">
+            <span>${loginMember.name} 님 환영합니다. <button onclick="location.href='/logout'">로그아웃</button></span>
+        </c:when>
+        <c:otherwise>
+            <button onclick="location.href='/login'">로그인</button>
+        </c:otherwise>
+    </c:choose>
 </div>
+</body>
+</html>

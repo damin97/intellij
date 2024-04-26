@@ -27,7 +27,6 @@ public class ProblemController {
     @Autowired
     AnswerRepository answerRepository;
 
-
     @GetMapping
     public String form(Model model) {
 
